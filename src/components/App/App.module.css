@@ -1,42 +1,32 @@
 .app {
-    padding: 0 16px;
-}
-
-.pagination {
+    width: 90%;
+    max-width: 1280px;
+    margin: 0px auto;
+    padding: 0 16px 16px;
+  }
+  
+  .toolbar {
+    margin-bottom: 16px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    margin: 40px 0;
-    list-style: none;
-    padding: 0;
-}
-
-.pagination li {
-    display: inline-block;
-}
-
-.pagination a {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
+    padding: 16px 0;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .button {
+    padding: 6px 12px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #0d6efd;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
-    text-decoration: none;
-    color: #333;
-    transition: all 0.3s;
-}
-
-.pagination a:hover {
-    background-color: #f0f0f0;
-}
-
-.pagination .selected a {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.pagination .disabled a {
-    cursor: not-allowed;
-    opacity: 0.5;
-}
+    transition: background-color 0.2s ease;
+  }
+  
+  .button:hover {
+    background-color: #0b5ed7;
+  }
+  
