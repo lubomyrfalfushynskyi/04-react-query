@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import ReactPaginate from 'react-paginate';
 
 import type { Movie } from '../../types/movie';
@@ -15,19 +15,26 @@ import MovieModal from '../MovieModal/MovieModal';
 import styles from './App.module.css';
 
 function App() {
-    const [query,setQuery] = useState<string>('');
-    const [page, setPage] = useState<number>(1);    
-    
+    const [query, setQuery] = useState<string>('');
+    const [page, setPage] = useState<number>(1);
+
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-    const {data, isLoading, isError} = useQuery({
+    const {data, isLoading, isError, isSuccess, isFetching} = useQuery({
         queryKey: ['movies', query, page],
         queryFn: () => fetchMovies(query, page),
         enabled: query !== '',
+        placeholderData: keepPreviousData,
     });
 
+    useEffect(() => {
+        if (isSuccess && data && data.results.length === 0) {
+            toast.error('No movies found for your request.');
+        }
+    }, [isSuccess, data]);
+
     const handleSearch = (searchQuery: string) => {
-            if (!searchQuery.trim()) {
+        if (!searchQuery.trim()) {
             toast.error('Please enter your search query.');
             return;
         }
@@ -54,15 +61,15 @@ function App() {
 
             <SearchBar onSubmit={handleSearch} />
 
-            {isLoading && <Loader />}
+            {(isLoading || isFetching) && <Loader />}
             {isError && <ErrorMessage />}
 
             {data && data.results.length > 0 && <MovieGrid movies={data.results} onSelect={handleMovieSelect} />}
 
             {selectedMovie && <MovieModal movie={selectedMovie} onClose={handleModalClose} />}
             {data && data.total_pages > 1 && (
-                <ReactPaginate 
-                pageCount={data.total_pages} 
+                <ReactPaginate
+                pageCount={data.total_pages}
                 onPageChange={handlePageChange}
                 forcePage={page - 1}
                 containerClassName={styles.pagination}
